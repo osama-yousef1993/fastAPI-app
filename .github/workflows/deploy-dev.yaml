@@ -12,7 +12,7 @@ jobs:
         steps:
             - uses: actions/checkout@v2
             - name: set Up Pyhton
-              uses: actions/setup-python@2
+              uses: actions/setup-python@v5
               with:
                 python-cersion: '3.11'
             - name: insall dependencies
