@@ -23,7 +23,7 @@ jobs:
                   # Run your database migration commands here
                   alembic upgrade head
               env:
-                  DATABASE_URL: postgresql://osama:A!2Yf3QWuwF@post-faat.postgres.database.azure.com:5432/clarity
+                  DATABASE_URL: ${{secrets.DATABASE_URL}}
             - name: Login to Azure
               uses: azure/login@v1
               with:
@@ -31,15 +31,15 @@ jobs:
             - name: build and push Docker image
               uses: azure/docker-login@v1
               with:
-                login-server: confast.azurecr.io
-                username: confast
-                password: R7USJmiVGT9DqYu8XEDNEv/XpZj0DttohFyLrpMddd+ACRDeT1ZB
+                login-server: ${{secrets.REGISTRY_NAME}}.azurecr.io
+                username: ${{ secrets.REGISTRY_USERNAME }}
+                password: ${{ secrets.REGISTRY_PASSWORD }}
             - name: build the image
               run: |
-                docker build -t confast.azurecr.io/myapp:${{ github.sha }} .
+                docker build -t ${{secrets.REGISTRY_NAME}}.azurecr.io/myapp:${{ github.sha }} .
             - name: push the image
               run: |
-                docker push confast.azurecr.io/myapp:${{ github.sha }}
+                docker push ${{secrets.REGISTRY_NAME}}.azurecr.io/myapp:${{ github.sha }}
             - name: Deploy to Azure Web App
               uses: azure/webapps-deploy@v2
               env:
@@ -64,4 +64,4 @@ jobs:
                 app-name: fastapi-clarity
                 slot-name: development
                 publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-                images: 'confast.azurecr.io/myapp:${{ github.sha }}'
+                images: '${{secrets.REGISTRY_NAME}}.azurecr.io/myapp:${{ github.sha }}'
