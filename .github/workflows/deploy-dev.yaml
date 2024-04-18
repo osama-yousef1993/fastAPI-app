@@ -28,8 +28,6 @@ jobs:
               uses: azure/login@v2
               with:
                 creds: ${{ secrets.AZURE_CREDENTIALS }}
-                auth-type: IDENTITY
-                enable-AzPSSession: true
 
             - name: build and push Docker image
               uses: azure/docker-login@v1
